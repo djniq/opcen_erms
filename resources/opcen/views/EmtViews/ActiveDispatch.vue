@@ -2,7 +2,7 @@
     <div class="flex flex-col md:flex-row h-auto md:h-[70vh] border border-gray-200">
         <!-- Dispatch Information -->
         <div class="w-full md:w-1/3 overflow-y-auto">
-            <div class="">
+            <div class="p-4">
                 <div>
                   <b>Request Date: </b> 2023-Nov-28
                   <!-- Patient Info -->
@@ -33,7 +33,7 @@
                       <br>
                       <b>Transport From:</b> Location A
                       <br>
-                      <b>Transport To:</b> Location A
+                      <b>Transport To:</b> Location B
                       <br>
                       <b>Responder:</b> Squad Eagle <a class="text-yellow-500 hover:text-red-500 cursor-pointer">
                         <font-awesome-icon :icon="['fas', 'eye']" /></a>

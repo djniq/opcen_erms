@@ -78,7 +78,7 @@
                       <b>Transport To:</b> Location A
                       <br>
                       <b>Responder:</b> Squad Eagle <a class="text-yellow-500 hover:text-red-500 cursor-pointer">
-                        <font-awesome-icon :icon="['fas', 'eye']" /></a>
+                        <font-awesome-icon :icon="['fas', 'eye']" @click="showResponders()" /></a>
                       <br>
                   </div>
                 </div>
@@ -127,7 +127,7 @@
                       <b>Transport To:</b> Location A
                       <br>
                       <b>Responder:</b> Squad Eagle <a class="text-yellow-500 hover:text-red-500 cursor-pointer">
-                        <font-awesome-icon :icon="['fas', 'eye']" /></a>
+                        <font-awesome-icon :icon="['fas', 'eye']" @click="showResponders()"  /></a>
                       <br>
                   </div>
                 </div>
@@ -176,7 +176,7 @@
                       <b>Transport To:</b> Location A
                       <br>
                       <b>Responder:</b> Squad Eagle <a class="text-yellow-500 hover:text-red-500 cursor-pointer">
-                        <font-awesome-icon :icon="['fas', 'eye']" /></a>
+                        <font-awesome-icon :icon="['fas', 'eye']" @click="showResponders()"  /></a>
                       <br>
                   </div>
                 </div>
@@ -225,7 +225,7 @@
                       <b>Transport To:</b> Location A
                       <br>
                       <b>Responder:</b> Squad Eagle <a class="text-yellow-500 hover:text-red-500 cursor-pointer">
-                        <font-awesome-icon :icon="['fas', 'eye']" /></a>
+                        <font-awesome-icon :icon="['fas', 'eye']" @click="showResponders()"  /></a>
                       <br>
                   </div>
                 </div>
@@ -274,7 +274,7 @@
                       <b>Transport To:</b> Location A
                       <br>
                       <b>Responder:</b> Squad Eagle <a class="text-yellow-500 hover:text-red-500 cursor-pointer">
-                        <font-awesome-icon :icon="['fas', 'eye']" /></a>
+                        <font-awesome-icon  @click="showResponders()"  /></a>
                       <br>
                   </div>
                 </div>
@@ -323,7 +323,7 @@
                       <b>Transport To:</b> Location A
                       <br>
                       <b>Responder:</b> Squad Eagle <a class="text-yellow-500 hover:text-red-500 cursor-pointer">
-                        <font-awesome-icon :icon="['fas', 'eye']" /></a>
+                        <font-awesome-icon :icon="['fas', 'eye']" @click="showResponders()"  /></a>
                       <br>
                   </div>
                 </div>
@@ -372,7 +372,7 @@
                       <b>Transport To:</b> Location A
                       <br>
                       <b>Responder:</b> Squad Eagle <a class="text-yellow-500 hover:text-red-500 cursor-pointer">
-                        <font-awesome-icon :icon="['fas', 'eye']" /></a>
+                        <font-awesome-icon :icon="['fas', 'eye']" @click="showResponders()"  /></a>
                       <br>
                   </div>
                 </div>
@@ -387,13 +387,14 @@
         </tbody>
       </table>
     </div>
-
+    <responders-modal v-model:open-responder-modal="openRespondersModal"></responders-modal>
   </div>
 </template>
 
 <script setup lang="ts">
 import VueDatePicker from '@vuepic/vue-datepicker';
-import { library } from '@fortawesome/fontawesome-svg-core'
+import { library } from '@fortawesome/fontawesome-svg-core';
+import RespondersModal from './RespondersModal.vue';
 
 /* add some free styles */
 import { faEye } from '@fortawesome/free-solid-svg-icons'
@@ -404,6 +405,12 @@ import { ref } from 'vue';
 library.add(faEye);
 
 const dateRange = ref(null);
+
+const openRespondersModal = ref(false);
+
+const showResponders = () => {
+  openRespondersModal.value = true;
+}
 </script>
 
 <style scoped></style>

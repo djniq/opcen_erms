@@ -29,7 +29,7 @@
             <GMapMap
             ref="map"
             :center="coords" :zoom="15"
-            map-type-id="terrain"
+            map-type-id="roadmap"
             style="width: 100%; height: 20rem"
             class="mb-4"
             >
