@@ -3,6 +3,11 @@
     <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
       <div class="w-full sm:max-w-md flex items-center justify-center py-5">
         <img
+          src="@/assets/img/itrmc-logo.png"
+          alt="ITRMC"
+          class="w-40 h-auto"
+        >
+        <img
           src="@/assets/img/opcen-logo.png"
           alt="OpCen"
           class="w-40 h-auto"
@@ -14,9 +19,7 @@
           <h1 class="text-xl font-bold leading-tight tracking-tight md:text-2xl text-white">
             Sign in to your account
           </h1>
-          <div v-if="error" class="p-4 mb-4 text-sm rounded-lg bg-gray-100 text-red-500" role="alert">
-            {{ error }}
-          </div>
+          
           <form
             class="space-y-4 md:space-y-6"
             @submit.prevent="handleSubmit">
@@ -75,24 +78,24 @@
         </div>
       </div>
     </div>
+    <notifications position="top center" />
   </section>
 </template>
 
 <script setup lang="ts">
 import axios from 'axios';
 import { ref } from 'vue';
-import { useRouter } from 'vue-router'
+import { useNotification } from "@kyvg/vue3-notification";
+
+const { notify } = useNotification();
 
 const username = ref('');
 const password = ref('');
 const error = ref('');
 
-const router = useRouter();
-
 const handleSubmit = () => {
   if (password.value.length > 0) {
       axios.get('/sanctum/csrf-cookie').then(response => {
-          console.log(response);
           axios.post('api/login', {
               username: username.value,
               password: password.value
@@ -101,7 +104,11 @@ const handleSubmit = () => {
                   if (response.data.success) {
                     window.location.href = "/";
                   } else {
-                      error.value = response.data.message
+                      error.value = response.data.message;
+                      notify({
+                        type: "error",
+                        text: error.value
+                      })
                   }
               })
               .catch(function (error) {

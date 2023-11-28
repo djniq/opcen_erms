@@ -3,7 +3,8 @@ import {createApp} from 'vue';
 import App from './App.vue';
 import router from '../opcen/router';
 import VueGoogleMaps from '@fawmi/vue-google-maps';
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import Notifications from '@kyvg/vue3-notification';
 
 createApp(App)
     .use(router)
@@ -13,5 +14,6 @@ createApp(App)
         libraries: "places"
       },
     })
+    .use(Notifications)
     .component('font-awesome-icon', FontAwesomeIcon)
     .mount("#app")
