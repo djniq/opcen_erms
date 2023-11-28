@@ -34,24 +34,40 @@
                       <b>Transport From:</b> Location A
                       <br>
                       <b>Transport To:</b> Location B
-                      <br>
-                      <b>Responder:</b> Squad Eagle <a class="text-yellow-500 hover:text-red-500 cursor-pointer">
-                        <font-awesome-icon :icon="['fas', 'eye']" /></a>
-                      <br>
                   </div>
                 </div>
+              </div>
+              <!-- Status -->
+              <div class="w-full flex items-center justify-center p-5">
+                <button class="p-2 bg-blue-600 rounded-lg" v-if="dispatchStatus===1" @click="dispatchStatus = 2">Start</button>
+                <button class="p-2 bg-blue-600 rounded-lg"  v-if="dispatchStatus===2" @click="dispatchStatus = 3">Arrived</button>
+                <button class="p-2 bg-blue-600 rounded-lg"  v-if="dispatchStatus===3" @click="dispatchStatus = 4">Move out from site</button>
+                <button class="p-2 bg-blue-600 rounded-lg"  v-if="dispatchStatus===4" @click="dispatchStatus = 5">Arrived to facility</button>
+                <button class="p-2 bg-blue-600 rounded-lg"  v-if="dispatchStatus===5" @click="dispatchStatus = 6">Endorse patient</button>
+                <button class="p-2 bg-blue-600 rounded-lg"  v-if="dispatchStatus===6" @click="completeDispatch()">Back to HQ/End</button>
               </div>
         </div>
         <!-- Dispatch Map -->
         <div class="w-full md:w-3/4">
             <Map />
         </div>
+        <notifications position="bottom center" />
     </div>
 </template>
 
 <script setup lang="ts">
 import Map from '@/components/map/Map.vue';
+import { notify } from '@kyvg/vue3-notification';
+import { ref } from 'vue';
 
+const dispatchStatus = ref(1);
+
+const completeDispatch = () => {
+  notify({
+    text: "Dispatch Completed!",
+    type: "success"
+  });
+}
 
 </script>
 
