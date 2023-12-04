@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\API\UserController;
+use App\Http\Controllers\API\HealthFacilityController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -16,9 +17,13 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::post('login', [UserController::class, 'login']);
-Route::post('register', [UserController::class, 'register']);
+Route::post('register', [UserController::class, 'register'])->middleware('auth:sanctum');
 Route::post('logout', [UserController::class, 'logout'])->middleware('auth:sanctum');
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/user', function (Request $request) {
+        return $request->user();
+    });
+
+    Route::apiResource('/health-facility',HealthFacilityController::class);
 });

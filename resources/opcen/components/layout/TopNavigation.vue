@@ -40,9 +40,14 @@
         </button>
       </div>
       <div class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1" id="navbar-user">
+        <img
+          src="@/assets/img/opcen-logo.png"
+          alt="OpCen"
+          class="w-10 h-auto"
+        >
         <ul
           class="flex flex-col font-medium p-4 md:p-0 mt-4 border-b border-b-gray-500 rounded-lg md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-transparent dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
-          <li>
+          <li v-can:view-opcen>
             <router-link :to="{name: 'Opcen'}"
               class="block py-2 px-3"
               :class="[
@@ -52,7 +57,7 @@
               ]"
               aria-current="page">Opcen</router-link>
           </li>
-          <li>
+          <li v-can:is-emt>
             <router-link :to="{name: 'Active Dispatch'}"
               class="block py-2 px-3"
               :class="[
@@ -72,7 +77,7 @@
               ]"
               >Reports</router-link>
           </li>
-          <li>
+          <li v-can:view-admin>
             <router-link :to="{name: 'AdminOverview'}"
               class="block py-2 px-3"
               :class="[

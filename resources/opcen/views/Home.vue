@@ -9,12 +9,12 @@
             </action-button>
         </div>
         <div class="w-full flex flex-col md:flex-row h-[77svh]">
-            <div class="w-full md:w-1/2 border border-gray-300">
-                <TransportRequestTable />
+            <div class="w-full border border-gray-300  p-4">
+                <IncidentTable />
             </div>
-            <div class="w-full md:w-1/2 border border-gray-300 p-1">
+            <!-- <div class="w-full md:w-1/2 border border-gray-300 p-1">
                 <Map />
-            </div>
+            </div> -->
         </div>
         <TransportRequestModal v-model:open-create-modal="openCreateModal"/>    
     </div>
@@ -22,9 +22,8 @@
 
 <script setup lang="ts">
 import ActionButton from '@/components/form/ActionButton.vue';
-import Map from '@/components/map/Map.vue';
 import TransportRequestModal from '@/components/opcenComponents/TransportRequestModal.vue';
-import TransportRequestTable from '@/components/opcenComponents/TransportRequestTable.vue';
+import IncidentTable from '@/components/opcenComponents/IncidentTable.vue';
 import { ref } from 'vue';
 
 const openCreateModal = ref(false);

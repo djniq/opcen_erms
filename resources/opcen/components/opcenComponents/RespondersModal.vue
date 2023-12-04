@@ -1,5 +1,5 @@
 <template>
-    <modal v-model:show-modal="openModal">
+    <modal v-if="openModal" @close-modal="openModal = false;">
         <template #modalTitle>
             Responders
         </template>

@@ -6,6 +6,7 @@
                 placeholder=""
                 @place_changed="setPlace($event, 'from')"
                 id="floating-transport-from"
+                :options="autoCompleteOptions"
                 class="block mb-2 py-2.5 px-0 w-full text-sm border-0 border-b-2 appearance-none bg-transparent text-white border-gray-600 focus:border-yellow-500 focus:outline-none focus:ring-0 peer">
             </GMapAutocomplete>
             <label for="floating-transport-from"
@@ -17,6 +18,7 @@
                 placeholder=""
                 @place_changed="setPlace($event, 'to')"
                 id="floating-transport-to"
+                :options="autoCompleteOptions"
                 class="block mb-2 py-2.5 px-0 w-full text-sm border-0 border-b-2 appearance-none bg-transparent text-white border-gray-600 focus:border-yellow-500 focus:outline-none focus:ring-0 peer">
             </GMapAutocomplete>
             <label for="floating-transport-to"
@@ -35,10 +37,10 @@
             >
 
             <!-- Marker to display the searched location -->
-            <!-- <GMapMarker :key="markerDetails.id" :position="markerDetails.position" :clickable="true" :draggable="false"
-                @click="openMarker(markerDetails.id)"> -->
+            <GMapMarker :key="markerDetails.id" :position="markerDetails.position" :clickable="true" :draggable="false"
+                @click="openMarker(markerDetails.id)">
                 <!-- InfoWindow to display the searched location details -->
-                <!-- <GMapInfoWindow v-if="locationDetails.address != ''" :closeclick="true" @closeclick="openMarker(null)"
+                <GMapInfoWindow v-if="locationDetails.address != ''" :closeclick="true" @closeclick="openMarker(null)"
                     :opened="openedMarkerID === markerDetails.id" :options="{
                         pixelOffset: {
                             width: 10,
@@ -57,11 +59,6 @@
                 </GMapInfoWindow>
 
             </GMapMarker>
-
-            <GMapPolyline
-                :path="path"
-                :editable="true"
-                ref="polyline" /> -->
         </GMapMap>
         </Transition>
         
@@ -70,13 +67,18 @@
   
   
 <script lang="ts" setup>
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 
 const showMapOnFocus = ref(false);
 
+// Autocomplete options
+const autoCompleteOptions = {
+    componentRestrictions: {country: "ph"}
+}
+
 // Location variables
-const transportFrom = ref(null);
-const transportTo = ref(null);
+const transportFrom = ref<google.maps.Map|null>(null);
+const transportTo = ref<google.maps.Map|null>(null);
 
 // Setting the default coordinates
 const coords = ref({ lat: 51.5072, lng: 0.1276 })
@@ -93,7 +95,7 @@ const locationDetails = ref({
     url: ''
 })
 
-const map = ref(null);
+const map = ref<any>(null);
 
 // Get users current location using the browser's geolocation API
 const getUserLocation = () => {
@@ -110,9 +112,8 @@ const getUserLocation = () => {
 
 // Set the location based on the place selected
 const setPlace = (place, model) => {
-    console.log(typeof place);
-    coords.value.lat = place.geometry.location.lat()
-    coords.value.lng = place.geometry.location.lng()
+    // coords.value.lat = place.geometry.location.lat()
+    // coords.value.lng = place.geometry.location.lng()
 
     // Update the location details
     locationDetails.value.address = place.formatted_address
@@ -134,33 +135,31 @@ const setPath = () => {
             {lat: transportFrom.value?.geometry.location.lat(), lng: transportFrom.value?.geometry.location.lng()},
             {lat: transportTo.value?.geometry.location.lat(), lng: transportTo.value?.geometry.location.lng()}
         ]
-        console.log(path.value);
         setDirection();
     }
 }
 
-const setDirection = () => {
+const directionsService = computed<any>(() => new google.maps.DirectionsService ?? null);
+const directionsDisplay = computed<any>(() => new google.maps.DirectionsRenderer ?? null);
 
-    var directionsService = new google.maps.DirectionsService;
-    var directionsDisplay = new google.maps.DirectionsRenderer({
-        map: map.value.$mapObject
-    });
+const setDirection = () => {
     
-    calculateAndDisplayRoute(directionsService, directionsDisplay, path.value[0], path.value[1]);
+    calculateAndDisplayRoute(path.value[0], path.value[1]);
 }
 
 //google maps API's direction service
-const calculateAndDisplayRoute = (directionsService, directionsDisplay, start, destination) => {
-    directionsService.route({
+const calculateAndDisplayRoute = (start, destination) => {
+    directionsDisplay.value.setMap(null);
+    directionsService.value.route({
         origin: start,
         destination: destination,
         travelMode: 'DRIVING'
     }, function(response, status) {
-        console.log(response);
         if (status === 'OK') {
-        directionsDisplay.setDirections(response);
+            directionsDisplay.value.setMap(map.value!.$mapObject);
+            directionsDisplay.value.setDirections(response);
         } else {
-        window.alert('Directions request failed due to ' + status);
+            window.alert('Directions request failed due to ' + status);
         }
     });
 }

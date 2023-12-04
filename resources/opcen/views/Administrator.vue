@@ -2,6 +2,7 @@
     <div class="w-full px-2 md:px-5">
     <TabMenu :tab-items="tabItems" />
     <RouterView />
+    <notifications position="bottom center" />
   </div>
 </template>
 
@@ -19,14 +20,14 @@ const tabItems = ref<SubMenuItem[]>([
     label: 'Overview'
   },
   {
-    path: '/admin/ambulances',
-    name: 'Ambulances',
-    label: 'Ambulances'
-  },
-  {
     path: '/admin/health-facilities',
     name: 'HealthFacilities',
     label: 'Health Facilities'
+  },
+  {
+    path: '/admin/ambulances',
+    name: 'Ambulances',
+    label: 'Ambulances'
   },
   {
     path: '/admin/drivers',

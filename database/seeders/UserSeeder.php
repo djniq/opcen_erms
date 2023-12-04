@@ -19,39 +19,55 @@ class UserSeeder extends Seeder
     {
         $faker = Faker::create();   
         DB::table('users')->insert([
-            'name' => 'Super Admin',
+            'first_name' => 'Superadmin',
+            'last_name' => 'User',
+            'health_facility_id' => 1, 
             'username' => 'superadmin',
             'email' => Str::random(10).'@gmail.com',
-            'primary_mobile_number' => $faker->numerify('9##########'),
+            'contact_no' => $faker->numerify('9##########'),
             'password' => Hash::make('password'),
-            'role' => 'superAdmin'
+            'role' => 'superadmin',
+            'status' => 1,
+            'created_by' => 1
         ]);
 
         DB::table('users')->insert([
-            'name' => 'Facility Admin',
-            'username' => 'admin',
+            'first_name' => 'Hfadmin',
+            'last_name' => 'User',
+            'health_facility_id' => 1,
+            'username' => 'hfadmin',
             'email' => Str::random(10).'@gmail.com',
-            'primary_mobile_number' => $faker->numerify('9##########'),
+            'contact_no' => $faker->numerify('9##########'),
             'password' => Hash::make('password'),
-            'role' => 'admin'
+            'role' => 'hfadmin',
+            'status' => 1,
+            'created_by' => 1
         ]);
 
         DB::table('users')->insert([
-            'name' => 'Opcen User',
+            'first_name' => 'Opcen',
+            'last_name' => 'User',
+            'health_facility_id' => 1,
             'username' => 'opcen',
             'email' => Str::random(10).'@gmail.com',
-            'primary_mobile_number' => $faker->numerify('9##########'),
+            'contact_no' => $faker->numerify('9##########'),
             'password' => Hash::make('password'),
-            'role' => 'opcen'
+            'role' => 'opcen',
+            'status' => 1,
+            'created_by' => 1
         ]);
 
         DB::table('users')->insert([
-            'name' => 'EMT User',
+            'first_name' => 'Emt',
+            'last_name' => 'User',
+            'health_facility_id' => 1,
             'username' => 'emt',
-            'primary_mobile_number' => $faker->numerify('9##########'),
+            'contact_no' => $faker->numerify('9##########'),
             'email' => Str::random(10).'@gmail.com',
             'password' => Hash::make('password'),
-            'role' => 'emt'
+            'role' => 'emt',
+            'status' => 1,
+            'created_by' => 1
         ]);
     }
 }

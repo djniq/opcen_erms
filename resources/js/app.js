@@ -1,17 +1,20 @@
 import {createApp} from 'vue';
-
 import App from './App.vue';
 import router from '../opcen/router';
 import VueGoogleMaps from '@fawmi/vue-google-maps';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import Notifications from '@kyvg/vue3-notification';
+import pinia from '@/middleware/pinia';
+import acl from '@/middleware/acl';
 
 createApp(App)
     .use(router)
+    .use(pinia)
+    .use(acl)
     .use(VueGoogleMaps, {
       load: {
         key: import.meta.env.VITE_GOOGLE_API_KEY,
-        libraries: "places"
+        libraries: "places",
       },
     })
     .use(Notifications)

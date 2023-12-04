@@ -14,7 +14,7 @@ class UserController extends Controller
     /**
      * Register
      */
-    public function register(Request $request)
+    public function create(Request $request)
     {
         try {
             $user = new User();

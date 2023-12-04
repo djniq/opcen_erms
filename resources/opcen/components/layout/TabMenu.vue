@@ -1,5 +1,5 @@
 <template>
-  <ul class="flex flex-wrap text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:border-gray-700 dark:text-gray-400">  
+  <ul class="flex flex-wrap text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:border-gray-700 dark:text-gray-400 mb-4">  
     <li v-for="item in tabItems" class="me-2" :key="String(item.name)">
           <a
             :href="item.path"

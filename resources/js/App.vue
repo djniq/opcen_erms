@@ -10,6 +10,7 @@
 </template>
 
 <script setup lang="ts">
+import { useUserStore } from '@/stores/user/userStore';
 import { defineAsyncComponent, onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
@@ -17,10 +18,21 @@ const TopNavigation = defineAsyncComponent(() => import('@/components/layout/Top
 
   const isLoggedIn = ref(false);
   const router = useRouter();
+  const userStore = useUserStore();
 
   onMounted(() => {
     if (window.Laravel.isLoggedin) {
-      isLoggedIn.value = true
+      isLoggedIn.value = true;
+      let user = window.Laravel.user;
+      userStore.user = {
+        id: user.id,
+        name: user.name,
+        username: user.username,
+        email: user.email,
+        mobile: '+63' +user.primary_mobile_number,
+        role: user.role,
+        permissions: [],
+      }
     } else {
       router.push({name: "Login"});
     }

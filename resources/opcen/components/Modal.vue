@@ -5,12 +5,17 @@
     aria-hidden="true"
     class="flex overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full"
     :class="[
-        {'hidden': !showModal},
         zIndex
     ]"
 >
     <div class="bg-white fixed w-full h-screen opacity-50 z-0 overflow-hidden top-0 left-0"></div>
-    <div class="relative p-4 w-full max-w-2xl max-h-full">
+    <div
+        class="relative p-4 w-full max-h-full"
+        :class="{
+            'max-w-2xl': size === 'default',
+            'max-w-md': size === 'small'
+        }"
+    >
         <!-- Modal content -->
         <div class="relative rounded-lg shadow bg-gray-700">
             <!-- Modal header -->
@@ -21,7 +26,7 @@
                 <button 
                     type="button"
                     class="bg-transparent rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center hover:bg-gray-600 hover:text-white"
-                    @click="emit('update:showModal', false)"
+                    @click="emit('closeModal')"
                 >
                     <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
@@ -45,21 +50,23 @@
 </template>
 
 <script setup lang="ts">
+import { PropType } from 'vue';
+
 
 const props = defineProps({
-    showModal: {
-        type: Boolean,
-        default: false
-    },
     zIndex: {
         type: String,
         default: 'z-50'
+    },
+    size: {
+        type: String as PropType<Sizes>,
+        default: 'default'
     }
 })
 
-const emit = defineEmits<{
-  (e: "update:showModal", value: Boolean): void;
-}>();
+type Sizes = 'small' | 'large' | 'default';
+
+const emit = defineEmits(['closeModal']);
 
 </script>
 

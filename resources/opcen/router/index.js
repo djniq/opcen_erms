@@ -13,17 +13,27 @@ import Drivers from "@/views/AdminViews/Drivers.vue";
 import HealthFacilities from "@/views/AdminViews/HealthFacilities.vue";
 import Responders from "@/views/AdminViews/Responders.vue";
 import Users from "@/views/AdminViews/Users.vue";
+import Unauthorized from "@/views/Unauthorized.vue";
+import { useUserStore } from '@/stores/user/userStore'
 
 const routes = [
   {
     path: "/",
     name: "Opcen",
     component: Home,
+    meta: {
+      can: 'view-opcen',
+      onDeniedRoute: '/unauthorized'
+    }
   },
   {
     path: "/emt",
     name: "EmtBase",
     component: Emt,
+    meta: {
+      can: 'is-emt',
+      onDeniedRoute: '/unauthorized'
+    },
     children: [
       {
         path: "",
@@ -41,6 +51,10 @@ const routes = [
     path: "/admin",
     name: "AdminBase",
     component: Administrator,
+    meta: {
+      can: 'view-admin',
+      onDeniedRoute: '/unauthorized'
+    },
     children: [
       {
         path: "",
@@ -84,11 +98,24 @@ const routes = [
     name: "Login",
     component: Login,
   },
+  {
+    path: "/unauthorized",
+    name: "Unauthorized",
+    component: Unauthorized
+  },
 ];
 
 const router = createRouter({
   history: createWebHistory(),
   routes,
 });
+
+router.beforeEach((to, from, next) => {
+  const store = useUserStore();
+  if (to.name === 'Opcen' && store.user.role === 'emt') {
+    next({ path: '/emt' })
+  } else
+    next()
+})
 
 export default router;
