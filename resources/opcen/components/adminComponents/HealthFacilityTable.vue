@@ -27,9 +27,7 @@
           <template v-if="loadingFacilities">
             <tr class="border-b border-gray-100" >
               <td colspan="6" class="p-2 border border-gray-100">
-                <div class="w-full flex justify-center py-5 text-white">
-                  <font-awesome-icon class="animate-spin h-10 w-10" :icon="['fas', 'spinner']" />
-                </div>
+                <Loading />
               </td>
               </tr>
           </template>
@@ -50,7 +48,9 @@
               </td>
               <td class="p-1 border border-gray-100">
                   <div class=" flex justify-center items center space-x-3">
-                      <button class="cursor-pointer" @click="updateFacility(facility)"><font-awesome-icon :icon="['fas', 'edit']" /></button>
+                      <button class="cursor-pointer" @click="updateFacility(facility)">
+                        <font-awesome-icon :icon="['fas', 'edit']" />
+                      </button>
                   </div>
               </td>
             </tr>
@@ -63,10 +63,11 @@
 <script setup lang="ts">
 import { useHealthFacilityStore } from '@/stores/healthFacility/healthFacilityStore';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faEdit, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faEdit } from '@fortawesome/free-solid-svg-icons';
 import { storeToRefs } from 'pinia';
 import {Facility} from '@/models/FacilityModel'
-library.add(faEdit, faSpinner);
+import Loading from '../Loading.vue';
+library.add(faEdit);
 
 const {facilities, loadingFacilities} = storeToRefs(useHealthFacilityStore());
 

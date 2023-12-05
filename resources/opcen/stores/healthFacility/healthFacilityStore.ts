@@ -17,9 +17,11 @@ export const useHealthFacilityStore = defineStore('healthFacilityStore', {
                 this.loadingFacilities = false;
             });
         },
-        async createFacility(form) {
+        async createFacility(form, successCallback, errorCallback) {
+            this.processingFacility = true;
             await api.createFacility(form).then(response => {
                 this.loadFacilities();
+                successCallback('New health facility created!');
                 return response.data;
             }).catch((e) => {
                 console.error(e.response.data);
@@ -27,20 +29,36 @@ export const useHealthFacilityStore = defineStore('healthFacilityStore', {
                     type: "error",
                     text: e.response.data.message
                   })
+                  errorCallback(e);
                   return null;
+            }).finally(() => {
+                this.processingFacility = false;
             });
         },
-        async updateFacility(form) {
+        async updateFacility(form, successCallback, errorCallback) {
+            this.processingFacility = true;
             await api.updateFacility(form).then(response => {
                 this.loadFacilities();
+                successCallback('Health facility updated!');
                 return response;
             }).catch((e) => {
-                console.error(e.response.data);
-                notify({
-                    type: "error",
-                    text: e.response.data.message
-                  })
-                  return null;
+                errorCallback(e);
+                return null;
+            }).finally(() => {
+                this.processingFacility = false;
+            });
+        },
+        async deleteFacility(id, successCallback, errorCallback) {
+            this.processingFacility = true;
+            await api.deleteFacility(id).then(response => {
+                this.loadFacilities();
+                successCallback('Health facility deleted!');
+                return response;
+            }).catch((e) => {
+                errorCallback(e);
+                return null;
+            }).finally(() => {
+                this.processingFacility = false;
             });
         }
     }

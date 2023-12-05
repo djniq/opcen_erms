@@ -61,19 +61,19 @@ class HealthFacilityController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Post  $post
+     * @param  integer $id
      * @return \Illuminate\Http\Response
      */
-    public function show(HealthFacility $facility)
+    public function show($id)
     {
-        return response()->json($facility);
+        return response()->json(HealthFacility::find($id));
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  App\Http\Requests\StoreHealthFacilityRequest  $request
-     * @param  \App\Models\HealthFacility  $facility
+     * @param  integer  $id
      * @return \Illuminate\Http\Response
      */
     public function update(StoreHealthFacilityRequest $request, $id)
@@ -103,11 +103,12 @@ class HealthFacilityController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Post  $post
+     * @param  integer $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(HealthFacility $facility)
+    public function destroy($id)
     {
+        $facility = HealthFacility::find($id);
         $facility->delete();
 
         return response(null, 204);

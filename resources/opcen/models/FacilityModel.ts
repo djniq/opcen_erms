@@ -1,6 +1,7 @@
 export interface FacilityState {
     facilities: Facility[];
     loadingFacilities: boolean;
+    processingFacility: boolean;
 }
 
 export interface Facility {

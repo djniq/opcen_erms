@@ -5,17 +5,22 @@ const apiClient = axios.create({
     withCredentials: true,
 });
 
+const healthFacilityUrl = '/health-facility';
+
 export default {
     getUser() {
         return apiClient.get('/user');
     },
     getFacilities() {
-        return apiClient.get('/health-facility');
+        return apiClient.get(healthFacilityUrl);
     },
     createFacility(data) {
-        return apiClient.post('/health-facility', data);
+        return apiClient.post(healthFacilityUrl, data);
     },
     updateFacility(data) {
-        return apiClient.put(`/health-facility/${data.id}`, data);
+        return apiClient.put(`${healthFacilityUrl}/${data.id}`, data);
+    },
+    deleteFacility(id) {
+        return apiClient.delete(`${healthFacilityUrl}/${id}`)
     }
 };

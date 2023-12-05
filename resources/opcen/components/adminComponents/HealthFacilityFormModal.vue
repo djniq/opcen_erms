@@ -1,10 +1,17 @@
 <template>
     <modal v-if="openModal" @close-modal="openModal = false;">
         <template #modalTitle>
-            Create New Health Facility
+            <span v-if="mode === 'create'">Create New Health Facility</span>
+            <span v-else>Update Health Facility</span>
         </template>
         <template #modalBody>
-            <form class="mx-auto" @submit.prevent="handleSubmit()">
+            <template v-if="processingFacility">
+                <div class="w-full h-20">
+                    <Loading />
+                </div>
+            </template>
+            <template v-else>
+                <form class="mx-auto" @submit.prevent="handleSubmit()">
                 <div class="px-4">
                     <div class="relative z-0 w-full mb-5 group">
                         <input 
@@ -72,32 +79,53 @@
                         required
                     />
                 </div>
-                <div class="flex justify-end space-x-4">
-                    <action-button
-                        type="submit"
-                    >
-                        Save
-                    </action-button>
-                    <button
-                        type="button"
-                        class="text-white bg-red-500 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
-                        @click="openModal = false"
-                    >Cancel</button>
+                <div class="flex w-full justify-between">
+                    <div class="self-start">
+                        <delete-button
+                            v-if="mode === 'update'"
+                            @button-action="confirmDelete(healthFacilityForm.id)"
+                        >
+                            <font-awesome-icon :icon="['fa', 'trash']" /> Delete
+                        </delete-button>
+                    </div>
+                    <div class="self-end">
+                        <action-button
+                            type="submit"
+                        >
+                        <font-awesome-icon :icon="['fa', 'save']" /> Save
+                        </action-button>
+                        <cancel-button
+                            @button-action="openModal = false"
+                        >
+                            <font-awesome-icon :icon="['fa', 'ban']" /> Cancel
+                        </cancel-button>
+                    </div>
                 </div>
-                
             </form>
+            </template>
         </template>
         
     </modal>
 </template>
 
 <script setup lang="ts">
-import { PropType, computed, onMounted, ref, watch } from 'vue';
+import { PropType, computed, ref, watch } from 'vue';
 import Modal from '../Modal.vue';
 import ActionButton from '../form/ActionButton.vue';
+import CancelButton from '../form/CancelButton.vue';
+import DeleteButton from '../form/DeleteButton.vue';
 import AddressSelection from '../map/AddressSelection.vue';
 import { useHealthFacilityStore } from '@/stores/healthFacility/healthFacilityStore';
 import { Facility } from '@/models/FacilityModel';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faBan, faSave, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { notify } from '@kyvg/vue3-notification';
+import { createConfirmDialog } from 'vuejs-confirm-dialog'
+import ConfirmDialogue from '@/components/ConfirmDialogue.vue';
+import { storeToRefs } from 'pinia';
+import Loading from '../Loading.vue';
+
+library.add(faSave, faBan, faTrash);
 
 const props = defineProps({
     openCreateModal: {
@@ -111,6 +139,9 @@ const props = defineProps({
 })
 
 const facilityStore = useHealthFacilityStore();
+const { processingFacility } = storeToRefs(facilityStore);
+
+const confirm = createConfirmDialog(ConfirmDialogue);
 
 const mode = computed(() => {
     return props.facility ? 'update' : 'create'
@@ -142,15 +173,15 @@ const healthFacilityForm = ref(defaultFormValues);
 const handleSubmit = async () => {
     try {
         let save = mode.value === 'create' 
-            ? await facilityStore.createFacility(healthFacilityForm.value)
-            : await facilityStore.updateFacility(healthFacilityForm.value).then(response => {
-                console.log(response);
-                if (response.status == 200) {
-                    closeAndResetModal();
-                }
-            });
+            ? await facilityStore.createFacility(healthFacilityForm.value, successCallback, errorCallback)
+            : await facilityStore.updateFacility(healthFacilityForm.value, successCallback, errorCallback);
     } catch (error) {
         console.error(error);
+        notify({
+            type: "error",
+            title: "Error",
+            text: error.response.data.message
+        })
     }
 }
 
@@ -159,13 +190,39 @@ const closeAndResetModal = () => {
     openModal.value = false;
 }
 
+const successCallback = (message) => {
+    notify({
+        type: 'success',
+        title: 'Success',
+        text: message
+    })
+    closeAndResetModal();
+}
+
+const errorCallback = (error) => {
+    console.error(error);
+}
+
+const confirmDelete = async (id) => {
+    const { isCanceled } = await confirm.reveal()
+
+    if(isCanceled) return;
+    
+    deleteFacility(id);
+}
+
+const deleteFacility = async (id) => {
+    await facilityStore.deleteFacility(id, successCallback, errorCallback);
+}
+
 watch(mode, (newVal) => {
-    if(mode.value === 'update') {
+    if(newVal === 'update') {
         healthFacilityForm.value = props.facility;
     } else {
         healthFacilityForm.value = defaultFormValues;
     }
-}, {deep: true})
+}, {deep: true});
+
 </script>
 
 <style>

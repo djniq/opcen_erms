@@ -6,6 +6,7 @@
       </div>
     </template>
     <RouterView class="view main-content w-full"></RouterView>
+    <DialogsWrapper />
   </div>
 </template>
 
