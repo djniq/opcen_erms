@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Incident extends Model
 {
@@ -36,4 +37,16 @@ class Incident extends Model
         'updated_by',
         'created_by'
     ];
+
+    public function dispatch(): HasOne {
+        return $this->hasOne(Dispatch::class);
+    }
+
+    public function driver(): HasOne {
+        return $this->hasOne(Driver::class);
+    }
+
+    public function ambulance(): HasOne {
+        return $this->hasOne(Ambulance::class);
+    }
 }

@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class StoreHealthFacilityRequest extends FormRequest
+class UpdateHealthFacilityRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,11 +26,11 @@ class StoreHealthFacilityRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => ['required', 'max:255', 'unique:health_facilities,hf_name'],
-            'level' => ['required', Rule::in(['primary', 'secondary', 'tertiary', 'specialized'])],
-            'email' => ['required', 'email'],
-            'contactNo' => ['required'],
-            'address' => ['required', 'array'],
+            'name' => ['max:255'],
+            'level' => [Rule::in(['primary', 'secondary', 'tertiary', 'specialized'])],
+            'email' => ['email'],
+            'contactNo' => ['string'],
+            'address' => ['array'],
         ];
     }
 }

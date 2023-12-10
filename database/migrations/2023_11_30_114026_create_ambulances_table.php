@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('health_facility_id');
             $table->foreign('health_facility_id')->references('id')->on('health_facilities');
-            $table->tinyInt('amb_type')->nullable(false)->comment('vehicle type 1, 2, or 3');
+            $table->string('amb_type')->nullable(false)->comment('Will accept any string to define the ambulance type');
             $table->string('amb_plate_no', 15)->nullable(false);
             $table->tinyInteger('status')->nullable(false)->comment('1: active; 2: inactive; 3: soft deleted');
             $table->unsignedBigInteger('updated_by')->nullable()->default(null);

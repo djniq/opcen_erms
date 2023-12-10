@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Ambulance extends Model
 {
@@ -21,4 +23,17 @@ class Ambulance extends Model
         'created_by',
         'status'
     ];
+
+    function healthFacility(): BelongsTo {
+        return $this->belongsTo(HealthFacility::class);
+    }
+
+    public function getStatus(int $status) {
+        $statusVals = [
+            1 => 'Active',
+            2 => 'Inactive'
+        ];
+
+        return $statusVals[$status];
+    }
 }

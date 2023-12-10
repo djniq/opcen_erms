@@ -6,17 +6,17 @@
             <th scope="col" class="columns-1 border border-gray-500 text-md font-medium text-gray-900 p-2 text-left">
               ID
             </th>
+            <th scope="col" class="columns-2 border border-gray-500 text-md font-medium text-gray-900 p-2 text-left">
+              Health Facility
+            </th>
+            <th scope="col" class="columns-2 border border-gray-500 text-md font-medium text-gray-900 p-2 text-left">
+              Plate No.
+            </th>
+            <th scope="col" class="columns-2 border border-gray-500 text-md font-medium text-gray-900 p-2 text-left">
+              Ambulance Type
+            </th>
             <th scope="col" class="columns-1 border border-gray-500 text-md font-medium text-gray-900 p-2 text-left">
-              Name
-            </th>
-            <th scope="col" class="columns-2 border border-gray-500 text-md font-medium text-gray-900 p-2 text-left">
-              Level
-            </th>
-            <th scope="col" class="columns-2 border border-gray-500 text-md font-medium text-gray-900 p-2 text-left">
-              Address
-            </th>
-            <th scope="col" class="columns-2 border border-gray-500 text-md font-medium text-gray-900 p-2 text-left">
-              Contact No.
+              Status
             </th>
             <th scope="col" class="columns-2 border border-gray-500 w-10 text-md font-medium text-gray-900 p-2 text-left">
               Action
@@ -24,7 +24,7 @@
           </tr>
         </thead>
         <tbody class="overflow-y-auto">
-          <template v-if="loadingFacilities">
+          <template v-if="loadingAmbulances">
             <tr class="border-b border-gray-100" >
               <td colspan="6" class="p-2 border border-gray-100">
                 <Loading />
@@ -32,23 +32,23 @@
               </tr>
           </template>
           <template v-else>
-            <tr class="border-b border-gray-100" v-for="facility in facilities" >
-              <td class="p-2 border border-gray-100">{{ facility.id }}</td>
+            <tr class="border-b border-gray-100" v-for="ambulance in ambulances" >
+              <td class="p-2 border border-gray-100">{{ ambulance.id }}</td>
               <td class="p-2 border border-gray-100">
-                {{ facility.name }}
+                  {{ ambulance.healthFacilityName }}
               </td>
               <td class="p-2 border border-gray-100">
-                  {{ FacilityLevel[facility.level] }}
+                {{ ambulance.plateNo }}
               </td>
               <td class="p-2 border border-gray-100">
-                {{ facility.address.formatted_address || '' }}
+                {{ ambulance.type }}
               </td>
               <td class="p-2 border border-gray-100">
-                {{ facility.contactNo }}
+                {{ ambulance.statusLabel }}
               </td>
               <td class="p-1 border border-gray-100">
                   <div class=" flex justify-center items center space-x-3">
-                      <button class="cursor-pointer" @click="updateFacility(facility)">
+                      <button class="cursor-pointer" @click="updateAmbulance(ambulance)">
                         <font-awesome-icon :icon="['fas', 'edit']" />
                       </button>
                   </div>
@@ -61,20 +61,20 @@
 </template>
 
 <script setup lang="ts">
-import { useHealthFacilityStore } from '@/stores/healthFacility/healthFacilityStore';
+import { useAmbulanceStore } from '@/stores/ambulance/ambulanceStore';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faEdit } from '@fortawesome/free-solid-svg-icons';
 import { storeToRefs } from 'pinia';
-import {Facility, FacilityLevel} from '@/models/FacilityModel'
+import {Ambulance} from '@/models/AmbulanceModel'
 import Loading from '../Loading.vue';
 library.add(faEdit);
 
-const {facilities, loadingFacilities} = storeToRefs(useHealthFacilityStore());
+const {ambulances, loadingAmbulances} = storeToRefs(useAmbulanceStore());
 
 const emit = defineEmits(['open-update-modal']);
 
-const updateFacility = (facility: Facility) => {
-    emit('open-update-modal', facility);
+const updateAmbulance = (ambulance: Ambulance) => {
+    emit('open-update-modal', ambulance);
 }
 </script>
 

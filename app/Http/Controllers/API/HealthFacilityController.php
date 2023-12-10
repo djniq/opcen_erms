@@ -4,26 +4,72 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreHealthFacilityRequest;
+use App\Http\Requests\UpdateHealthFacilityRequest;
 use App\Http\Resources\HealthFacilityResource;
+use App\Models\Ambulance;
+use App\Models\Driver;
 use App\Models\HealthFacility;
+use App\Models\User;
 
 class HealthFacilityController extends Controller
 {
     public function index() {
-        $facilities = HealthFacility::all();
+        $facilities = HealthFacility::select([
+            'id',
+            'hf_name as name',
+            'hf_email as email',
+            'hf_contact_no as contactNo',
+            'hf_level as level',
+            'hf_location as location',
+            'created_by as createdBy',
+            'created_at as createdAt',
+            'updated_by as updatedBy',
+            'updated_at as updatedAt'
+        ])->get();
         $facilities = $facilities->each(function($item, $key){
-            $item->name = $item->hf_name;
-            unset($item->hf_name);
-            $item->email = $item->hf_email;
-            unset($item->hf_email);
-            $item->contactNo = $item->hf_contact_no;
-            unset($item->hf_contact_no);
-            $item->level = $item->hf_level;
-            unset($item->hf_level);
-            $item->address = json_decode($item->hf_location);
-            unset($item->hf_location);
+            $item->address = json_decode($item->location);
         });
         return HealthFacilityResource::collection($facilities);
+    }
+
+    public function assignablehealthFacilities() {
+        $facilities = HealthFacility::select(['id', 'hf_name as name'])
+            ->where('status', 1)
+            ->get();
+        return HealthFacilityResource::collection($facilities);
+    }
+
+    /**
+     * Retrieve the asset counters for all or per healthFacility
+     */
+    public function counters() {
+        $facilityCount = HealthFacility::where('status', 1)->count();
+        $ambulanceCount = Ambulance::where('status', 1)->count();
+        $driverCount = Driver::where('status', 1)->count();
+        $responderCount = User::where('role', 'emt')->where('status', 1)->count();
+
+        return response()->json([
+            "facilities" => $facilityCount,
+            "ambulances" => $ambulanceCount,
+            "drivers" => $driverCount,
+            "responders" => $responderCount
+        ]);
+    }
+
+    /**
+     * Retrieve the asset counters for per health facility
+     */
+    public function countersPerFacility(int $healthFacility) {
+        $ambulanceCount = Ambulance::where('health_facility_id', $healthFacility)->where('status', 1)->count();
+        $driverCount = Driver::where('health_facility_id', $healthFacility)->where('status', 1)->count();
+        $responderCount = User::where('health_facility_id', $healthFacility)->where('role', 'emt')->where('status', 1)->count();
+        
+        return HealthFacilityResource::collection([
+            "facilities" => 1,
+            "ambulances" => $ambulanceCount,
+            "drivers" => $driverCount,
+            "responders" => $responderCount
+        ]);
     }
 
     /**
@@ -76,7 +122,7 @@ class HealthFacilityController extends Controller
      * @param  integer  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(StoreHealthFacilityRequest $request, $id)
+    public function update(UpdateHealthFacilityRequest $request, $id)
     {
         $facility = HealthFacility::find($id);
         try {

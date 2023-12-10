@@ -17,6 +17,24 @@ export const useHealthFacilityStore = defineStore('healthFacilityStore', {
                 this.loadingFacilities = false;
             });
         },
+        async getAssetCounters() {
+            this.loadingCounters = true;
+            await api.getFacilityAssetCounters().then(response => {
+                this.assetCounters = response.data;
+                return this.assetCounters;
+            }).finally(() => {
+                this.loadingCounters = false;
+            });
+        },
+        async getFacilityOptions() {
+            this.loadingOptions = true;
+            await api.getFacilityOptions().then(response => {
+                this.facilityOptions = response.data.data;
+                return this.facilityOptions;
+            }).finally(() => {
+                this.loadingOptions = false;
+            });
+        },
         async createFacility(form, successCallback, errorCallback) {
             this.processingFacility = true;
             await api.createFacility(form).then(response => {

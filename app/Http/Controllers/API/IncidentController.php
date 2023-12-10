@@ -5,6 +5,8 @@ namespace App\Http\Controllers\API;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Incident;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class IncidentController extends Controller
 {
@@ -15,23 +17,23 @@ class IncidentController extends Controller
     {
         try {
             $incident = new Incident();
-            $incident->health_facility_id = $request->health_facility_id;
-            $incident->reported_datetime = $request->reported_datetime;
-            $incident->nature_of_operation = $request->nature_of_operation;
-            $incident->transfer_category = $request->transfer_category;
-            $incident->transfer_vicinity = $request->transfer_vicinity;
-            $incident->from_health_facility_id = $request->from_health_facility_id;
-            $incident->to_health_facility_id = $request->to_health_facility_id;
+            $incident->health_facility_id = $request->healthFacilityId;
+            $incident->reported_datetime = Carbon::now();
+            $incident->nature_of_operation = $request->nature;
+            $incident->transfer_category = $request->category;
+            $incident->transfer_vicinity = $request->vicinity;
+            $incident->from_health_facility_id = $request->fromHealthFacilityId === 'self' ? Auth()->user()->health_facility_id : $request->fromHealthFacilityId;
+            $incident->to_health_facility_id = $request->toHealthFacilityId === 'self' ? Auth()->user()->health_facility_id : $request->toHealthFacilityId;
             $incident->origin = $request->origin;
             $incident->destination = $request->destination;
-            $incident->status = $request->status;
-            $incident->patient_ehr_id = $request->patient_ehr_id;
-            $incident->patient_first_name = $request->patient_first_name;
-            $incident->patient_last_name = $request->patient_last_name;
-            $incident->patient_middle_name = $request->patient_middle_name;
-            $incident->patient_birthdate = $request->patient_birthdate;
-            $incident->patient_address = $request->patient_address;
-            $incident->chief_complaint = $request->chief_complaint;
+            $incident->status = 'pending';
+            $incident->patient_ehr_id = $request->patientEhrId;
+            $incident->patient_first_name = $request->patientFirstName;
+            $incident->patient_last_name = $request->patientLastName;
+            $incident->patient_middle_name = $request->patientMiddleName;
+            $incident->patient_birthdate = $request->patientBirthdate;
+            $incident->patient_address = $request->patientAddress;
+            $incident->chief_complaint = $request->chiefComplaint;
             $incident->remarks = $request->remarks;
             $incident->created_by = Auth()->user()->id;
             $incident->save();

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class HealthFacility extends Model
 {
@@ -24,4 +25,8 @@ class HealthFacility extends Model
         'updated_by',
         'created_by'
     ];
+
+    public function ambulances(): HasMany {
+        return $this->hasMany(Ambulance::class, 'health_facility_id', 'id');
+    }
 }

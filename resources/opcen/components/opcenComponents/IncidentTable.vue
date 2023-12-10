@@ -86,6 +86,7 @@
               <div class="mb-4 p-2 bg-gray-700 rounded-lg inline-block">Pending</div>
             </td>
             <td class="p-1 border border-gray-100">
+              <button @click="showIncidentDetails()">View Incident</button>
               <button>Send Dispatch</button>
               <button>Cancel Dispatch</button>
               <button>Complete</button>
@@ -95,6 +96,7 @@
       </table>
     </div>
     <responders-modal v-model:open-responder-modal="openRespondersModal"></responders-modal>
+    <IncidentDetailsModal v-model:open-create-modal="openIncidentDetailsModal" />
   </div>
 </template>
 
@@ -108,15 +110,21 @@ import { faEye } from '@fortawesome/free-solid-svg-icons'
 
 import '@vuepic/vue-datepicker/dist/main.css'
 import { ref } from 'vue';
+import IncidentDetailsModal from './IncidentDetailsModal.vue';
 
 library.add(faEye);
 
 const dateRange = ref(null);
 
 const openRespondersModal = ref(false);
+const openIncidentDetailsModal = ref(false);
 
 const showResponders = () => {
   openRespondersModal.value = true;
+}
+
+const showIncidentDetails = () => {
+  openIncidentDetailsModal.value = true;
 }
 </script>
 

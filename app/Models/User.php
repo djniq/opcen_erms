@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -48,4 +49,28 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    function healthFacility(): BelongsTo {
+        return $this->belongsTo(HealthFacility::class);
+    }
+
+    public function getStatus(int $status) {
+        $statusVals = [
+            1 => 'Active',
+            2 => 'Inactive'
+        ];
+
+        return $statusVals[$status];
+    }
+
+    public function getRole(string $role) {
+        $roleVals = [
+            'superadmin' => 'Super Admin',
+            'hfadmin' => 'Health Facility Administrator',
+            'opcen' => 'Primary OpCen User',
+            'emt' => 'EMT staff/responder'
+        ];
+
+        return $roleVals[$role];
+    }
 }

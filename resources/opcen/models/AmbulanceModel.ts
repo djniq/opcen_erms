@@ -7,8 +7,10 @@ export interface AmbulanceState {
 export interface Ambulance {
     id?: number;
     healthFacilityId?: number;
+    healthFacilityName?: string;
     type?: string;
     plateNo?: string;
     status?: number;
+    statusLabel?: string;
 }
 
