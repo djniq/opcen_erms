@@ -472,7 +472,7 @@
                             placeholder="Remarks..."></textarea>
                     </div>
                 </div>
-                <div class="flex justify-end space-x-4">
+                <div class="flex justify-end space-x-2">
                     <action-button
                         type="submit"
                     >

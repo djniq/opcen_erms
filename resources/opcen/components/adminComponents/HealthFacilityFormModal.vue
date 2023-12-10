@@ -88,7 +88,7 @@
                             <font-awesome-icon :icon="['fa', 'trash']" /> Delete
                         </delete-button>
                     </div>
-                    <div class="self-end">
+                    <div class="self-end space-x-2">
                         <action-button
                             type="submit"
                         >
