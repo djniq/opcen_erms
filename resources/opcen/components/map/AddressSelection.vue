@@ -31,7 +31,8 @@ const props = defineProps({
 
 // Autocomplete options
 const autoCompleteOptions = {
-    componentRestrictions: {country: "ph"}
+    componentRestrictions: {country: "ph"},
+    fields: ['geometry', 'formatted_address', 'address_components']
 }
 
 const emit = defineEmits<{
@@ -52,7 +53,4 @@ const setPlace = (place) => {
     address.value = place.name !== '' ? place: null;
 }
 
-watch(()=>props.formAddress, (val) => {
-    console.log(val);
-}, {deep: true})
 </script>

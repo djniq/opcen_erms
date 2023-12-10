@@ -1,7 +1,7 @@
-import { AmbulanceState } from '@/models/AmbulanceModel';
+import { IncidentState } from '@/models/IncidentModel';
 
 export const getters = {
-    getDrivers(state: AmbulanceState) {
-        return state.ambulances;
+    getIncidents(state: IncidentState) {
+        return state.incidents;
     }
 }

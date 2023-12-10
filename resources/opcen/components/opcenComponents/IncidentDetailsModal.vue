@@ -9,37 +9,42 @@
                 <div class="w-full md:w-1/3 overflow-y-auto">
                     <div class="p-4">
                         <div>
-                        <b>Request Date: </b> 2023-Nov-28
-                        <!-- Patient Info -->
-                        <div class="text-md font-bold border-b border-red-500 pb-2 my-2">Patient Info:</div>
-                        <div class="text-sm text-gray-200 mb-4">
-                            <b>Patient ID:</b> 234
-                            <br>
-                            <b>Requester Name:</b> Juan Dela Cruz
-                            <br>
-                            <b>Chief complaints:</b>
-                            <br>
-                            Vehicular accident
-                            <br>
-                            <b>Remarks:</b>
-                            <br>
-                            Patient is unconscious with multiple bruises on the body. 
-                            <br>
-                        </div>
-                        <!-- Status -->
-                        <div class="text-md font-bold border-b border-red-500 pb-2 mb-2">Status:</div>
-                        <div class="mb-4 p-2 bg-gray-700 rounded-lg inline-block">Pending</div>
-                        <!-- Transport Info -->
-                        <div class="text-md font-bold border-b border-red-500 pb-2 mb-2">Transport Info:</div>
-                        <div class="text-sm text-gray-200 pb-2">
-                            <b>Category:</b> Emergency Dispatch (Trauma)
-                            <br>
-                            <b>Type:</b> Dispatch type here
-                            <br>
-                            <b>Transport From:</b> Location A
-                            <br>
-                            <b>Transport To:</b> Location B
-                        </div>
+                            <b>Request Date: </b> {{ incident.reportedDatetime }}
+                            <!-- Patient Info -->
+                            <div class="text-md font-bold border-b border-red-500 pb-2 my-2">Patient Info:</div>
+                            <div class="text-sm text-gray-200 mb-4">
+                                <template v-if="incident.patientEhrId">
+                                    <b>Patient ID:</b> {{ incident.patientEhrId }}
+                                    <br>
+                                </template>
+                                <b>Requester/Patient Name:</b> {{ incident.patientLastName + ', ' + incident.patientFirstName + (incident.patientMiddleName ? ' ' + String(incident.patientMiddleName).charAt(0) + '.' : '')}}
+                                <br>
+                                <b>Requester/Patient Birthdate:</b> {{ incident.patientBirthdate }}
+                                <br>
+                                <b>Chief complaints:</b>
+                                <br>
+                                {{ incident.chiefComplaint }}
+                                <br>
+                                <b>Remarks:</b>
+                                <br>
+                                {{ incident.remarks }}
+                                <br>
+                            </div>
+                            <!-- Status -->
+                            <div class="text-md font-bold border-b border-red-500 pb-2 mb-2">Status:</div>
+                            <div class="mb-4 p-2 bg-gray-700 rounded-lg inline-block">{{ incident.statusLabel }}</div>
+                            <!-- Transport Info -->
+                            <div class="text-md font-bold border-b border-red-500 pb-2 mb-2">Transport Info:</div>
+                            <div class="text-sm text-gray-200 pb-2">
+                                <b>Category:</b> {{ incident.categoryLabel }}
+                                <br>
+                                <b>Type:</b> {{ incident.vicinityLabel }}
+                                <br>
+                                <b>Transport From:</b> {{ incident.from_health_facility ? incident.from_health_facility.hf_name : incident.origin?.formatted_address }}
+                                <br>
+                                <b>Transport To:</b> {{  incident.to_health_facility ? incident.to_health_facility.hf_name : incident.destination?.formatted_address }}
+                                <br>
+                            </div>
                         </div>
                     </div>
                     <!-- Status -->
@@ -54,7 +59,7 @@
                 </div>
                 <!-- Dispatch Map -->
                 <div class="w-full md:w-3/4">
-                    <Map />
+                    <Map :incident="incident" />
                 </div>
                 <notifications position="bottom center" />
             </div>

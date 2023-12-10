@@ -10,11 +10,15 @@ export interface Incident {
     reportedDatetime?: string;
     nature: string;
     category: string;
+    categoryLabel?: string;
     vicinity: string;
+    vicinityLabel?: string;
     fromHealthFacilityId?: number|'self';
+    from_health_facility?: any;
     toHealthFacilityId?: number|'self';
-    origin: google.maps.Map|null;
-    destination: google.maps.Map|null;
+    to_health_facility?: any;
+    origin: any|null;
+    destination: any|null;
     status?: number;
     statusLabel?: string;
     patientEhrId?: string;

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Incident extends Model
@@ -42,11 +43,53 @@ class Incident extends Model
         return $this->hasOne(Dispatch::class);
     }
 
-    public function driver(): HasOne {
-        return $this->hasOne(Driver::class);
+    // public function driver(): HasOne {
+    //     return $this->hasOne(Driver::class);
+    // }
+
+    // public function ambulance(): HasOne {
+    //     return $this->hasOne(Ambulance::class);
+    // }
+
+    public function healthFacility(): BelongsTo {
+        return $this->belongsTo(HealthFacility::class);
     }
 
-    public function ambulance(): HasOne {
-        return $this->hasOne(Ambulance::class);
+    public function fromHealthFacility(): HasOne {
+        return $this->hasOne(HealthFacility::class, 'id', 'from_health_facility_id');
+    }
+
+    public function toHealthFacility(): HasOne {
+        return $this->hasOne(HealthFacility::class, 'id', 'to_health_facility_id');
+    }
+
+    public function getStatus(int $status) {
+        // 0: open; 1:dispatch initiated; 2: dispatch-completed; 3: closed without dispatch
+        $statusVals = [
+            0 => 'Pending',
+            1 => 'Dispatch Initiated',
+            2 => 'Dispatch Completed',
+            3 => 'Closed Without Dispatch'
+        ];
+
+        return $statusVals[$status];
+    }
+
+    public function getCategory(string $category) {
+        $catVals = [
+            'step-up' => 'Step Up',
+            'step-down' => 'Step Down'
+        ];
+
+        return $catVals[$category];
+    }
+
+    public function getVicinity(string $vicinity) {
+        $vicinityVals = [
+            'within' => 'Within La Union',
+            'outside' => 'Outside La Union'
+        ];
+
+        return $vicinityVals[$vicinity];
     }
 }

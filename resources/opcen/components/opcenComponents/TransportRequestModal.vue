@@ -9,6 +9,40 @@
                 <Loading />
             </div>
             <form v-else class="mx-auto" @submit.prevent="handleSubmit()">
+                <div class="px-4 mb-4">
+                    <div class="text-gray-400 text-sm">
+                        Reporting Health Facility
+                    </div>
+                    <label
+                        for="reporting-health-facility-select"
+                        class="sr-only"
+                    >
+                    Reporting Health Facility
+                    </label>
+                    <template v-if="loadingOptions">
+                        <Loading />
+                    </template>
+                    <select
+                        v-else
+                        v-model="incidentForm.healthFacilityId"
+                        id="reporting-health-facility-select"
+                        class="font-medium border text-sm rounded-lg block w-full p-2.5 bg-gray-700 border-gray-600 placeholder-white text-white ring-blue-500 focus:border-blue-500"   
+                        required
+                    >
+                        <option
+                            value=""
+                            disabled
+                            selected
+                        >
+                            Select Health Facility
+                        </option>
+                        <option
+                            v-for="option in facilityOptions"
+                            :value="option.id">
+                                {{ option.name }}
+                            </option>
+                    </select>
+                </div>
                 <div class="text-lg font-semibold border-b border-gray mb-4 text-gray-200">
                     Nature of Operation
                 </div>
@@ -111,8 +145,8 @@
                             placeholder="Select area coverage"    
                         >
                             <option value="" disabled>Select Area Coverage</option>
-                            <option value="within-la-union">Within La Union</option>
-                            <option value="outside-la-union">Outside La Union</option>
+                            <option value="within">Within La Union</option>
+                            <option value="outside">Outside La Union</option>
                         </select>
                         <div v-if="errors.vicinity" class="text-red-400 text-sm">{{ errors.vicinity }}</div>
                     </div>
@@ -281,7 +315,11 @@
                                 >
                                     To Health Facility
                                 </label>
+                                <template v-if="loadingOptions">
+                                    <Loading />
+                                </template>
                                 <select
+                                    v-else
                                     v-model="incidentForm.toHealthFacilityId"
                                     id="to-health-facility-select"
                                     class="font-medium border text-sm rounded-lg block w-full p-2.5 bg-gray-700 border-gray-600 placeholder-white text-white ring-blue-500 focus:border-blue-500"   
@@ -292,12 +330,7 @@
                                         disabled
                                         selected
                                     >
-                                        <template v-if="loadingOptions">
-                                            <Loading />
-                                        </template>
-                                        <template v-else>
-                                            Select Health Facility
-                                        </template>
+                                        Select Health Facility
                                     </option>
                                     <option
                                         v-for="option in facilityOptions"
@@ -387,11 +420,12 @@
                             id="patient-birthdate"
                             class="w-1/2"
                             v-model="incidentForm.patientBirthdate"
+                            model-type="YYYY-MM-dd"
                             :range="false"
                             :enable-time-picker="false"
                             :max-date="new Date()"
                             :teleport="true"
-                            format="yyyy-MM-dd"
+                            format="MMM dd, YYYY"
                             required
                         />
                     </div>
@@ -432,6 +466,7 @@
                             >Remarks</label>
                         <textarea
                             id="remarks"
+                            v-model="incidentForm.remarks"
                             rows="4"
                             class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             placeholder="Remarks..."></textarea>
@@ -606,13 +641,13 @@ const handleSubmit = async () => {
     // submit
     console.log(finalForm);
 
-    return;
+    // return;
 
     try {
         if( mode.value === 'create') 
-            await incidentStore.createFacility(incidentForm.value, successCallback, errorCallback)
+            await incidentStore.createIncident(incidentForm.value, successCallback, errorCallback)
         else
-            await incidentStore.updateFacility(incidentForm.value, successCallback, errorCallback);
+            await incidentStore.updateIncident(incidentForm.value, successCallback, errorCallback);
     } catch (error) {
         console.error(error);
         notify({

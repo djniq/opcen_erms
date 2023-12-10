@@ -21,9 +21,9 @@ return new class extends Migration
             $table->enum('nature_of_operation', ['conduction', 'emergency-dispatch-trauma', 'emergency-dispatch-medical', 'deployment'])->nullable(false);
             $table->enum('transfer_category', ['step-up', 'step-down'])->nullable(false);
             $table->enum('transfer_vicinity', ['within', 'outside'])->comment('within: Inside La Union; outside: Outside La Union')->nullable(false);
-            $table->unsignedBigInteger('from_health_facility_id');
+            $table->unsignedBigInteger('from_health_facility_id')->nullable();
             $table->foreign('from_health_facility_id')->references('id')->on('health_facilities');
-            $table->unsignedBigInteger('to_health_facility_id');
+            $table->unsignedBigInteger('to_health_facility_id')->nullable();
             $table->foreign('to_health_facility_id')->references('id')->on('health_facilities');
             $table->json('origin')->nullable(false);
             $table->json('destination')->nullable(false);
@@ -36,7 +36,7 @@ return new class extends Migration
             $table->date('patient_birthdate');
             $table->string('patient_address')->comment('Manually inputted address');
             $table->string('chief_complaint')->nullable(false);
-            $table->string('remarks');
+            $table->string('remarks')->nullable();
             $table->unsignedBigInteger('updated_by')->nullable()->default(null);
             $table->unsignedBigInteger('created_by');
             $table->foreign('updated_by')->references('id')->on('users');
